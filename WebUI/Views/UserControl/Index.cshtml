@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>Kullanıcı Girişi</h1>
+<form asp-action="UserControl" asp-controller="UserControl">
+  <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">KullanıcıAdı</label>
+    <input type="text" class="form-control" name="UserName" id="UserName" aria-describedby="emailHelp">
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Şifre</label>
+    <input type="password" class="form-control" name="Password" id="Password">
+  </div>
+  <button type="submit" id="enterUser" class="btn btn-success">Giriş</button>
+</form>
+<script>
+    //$("#enterUser").click(function(){
+    //    var user={
+    //        UserName:$("#UserName").val(),
+    //        Password:$("#Password").val()
+    //    }
+    //    $.ajax({
+    //        type:"post",
+    //        url:"/UserControl/UserControl",
+    //        data:user,
+    //        success:function(data){
+
+    //        }
+    //    })
+    //})
+</script>

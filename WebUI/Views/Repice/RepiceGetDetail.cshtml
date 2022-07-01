@@ -1,0 +1,61 @@
+﻿@using Entities.Concrete
+@using Entities.DTO_s
+@model Specification
+@{
+    ViewData["Title"] = "RepiceGetDetail";
+    Layout = "~/Views/Shared/_FoodLayout.cshtml";
+}
+
+<h1>Tarif Detay</h1>
+@*<link href="/recipe-book-html-template-master/css/bootstrap.min.css"/>*@
+
+  <section id="recipe">
+    <div class="container">
+      <div class="row">
+        <!-- Title -->
+        <div class="col-12">
+          <h2>@Model.Description</h2>
+        </div>
+      </div>
+      <div class="row vertical-align">
+        <div class="col-12">
+          <!-- Picture -->
+          <div class="col-md-8 pull-left wow swing">
+            <img src="images/bbq-pork-ribs.jpg" alt="bbq-pork-ribs" class="recipe-picture" />
+          </div>
+          <!-- Info -->
+          <div class="col-md-4 pull-right wow lightSpeedIn">
+            <div class="recipe-info">
+              <h3>@Model.Description</h3>
+              
+              
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Ingredients -->
+      <div class="row wow slideInUp">
+        <div class="col-12">
+          <div class="recipe-ingredients">
+            <h3>Malzemeler</h3>
+            <dl class="ingredients-list">
+                @foreach(SpecificationMaterialDto metarial in ViewBag.recipeMetarials){
+              <dt>@metarial.Slug</dt> <dd>@metarial.Material</dd>
+                }
+            </dl>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Back to recipes -->
+      <div class="row wow rollIn">
+        <div class="col-12 text-center">
+          <a href="/Repice/Index">
+            <i class="fa fa-backward" aria-hidden="true"></i>
+            Tariflere Dön
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>

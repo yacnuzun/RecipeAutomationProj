@@ -1,0 +1,73 @@
+﻿@using Entities.Concrete
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script charset="utf-8" src="~/recipe-book-html-template-master/js/jquery-3.3.1.min.js"></script>
+
+<h1>Tarif Kitabı</h1>
+
+<div id="tarifTable">
+    <a href="/UserControl/Index" class="btn btn-success">Admin Girişi</a>
+</div>
+
+
+
+<section id="items">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2>Recipes</h2>
+            </div>
+        </div>
+        <div class="row">
+            <!-- First recipe item -->
+            <div  class="col-lg-4 col-md-6 col-sm-12 wow fadeIn">
+                <div id="foodList" class="recipe-item text-center">
+                   @foreach(Specification recipe in ViewBag.specifications)
+                    {<a href="RepiceGetDetail/@recipe.Id">
+                        <img src="~/recipe-book-html-template-master/images/bbq-pork-ribs.jpg" alt="bbq-pork-ribs" />
+                    </a>
+                    <br />
+                    <h3>@recipe.Description</h3>}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="categories">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2>Categories</h2>
+            </div>
+        </div>
+        <div id="categoryList" class="row wow zoomIn">
+            @foreach(Category category in ViewBag.categories){
+            <!-- Breakfast - Category Item -->
+            <div  class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
+                <div  class="category-item text-center">
+                    <br />
+                    <a id="category" href="/Repice/GetRepiceByCategory/@category.Id" class="btn btn-outline-light" value="@category.Id">@category.CategoryName</a>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</section>
+<script >
+
+    
+
+   @* $("#category").click(function(){
+        $.ajax({
+            type:"get",
+            url:"/Repice/GetRepiceByCategory",
+            data:(this).val(),
+            success:function(data){
+                console.log(data.Message);
+            }
+        })
+    })*@
+   
+</script>

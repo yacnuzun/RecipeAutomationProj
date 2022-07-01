@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Basic meta info
+  ==================== -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Barbecue Pork Ribs | Recipe Book</title>
+
+  <!-- Favicon
+  ============ -->
+  
+   <partial name="~/Views/Shared/_FoodLayoutViewComponents/_IconViewComponent.cshtml" />
+
+  <!-- CSS files
+  ============== -->
+   <partial name="~/Views/Shared/_FoodLayoutViewComponents/_CssViewComponent.cshtml" />
+ 
+
+  <!-- Modernizr file
+  =================== -->
+  <script charset="utf-8" type="text/javascript "src="~/recipe-book-html-template-master/recipe-book-html-template-master/js/modernizr.custom.js"></script>
+
+</head>
+
+<body>
+
+  <!-- Splash Screen
+  ================== -->
+  <div id="splash"></div>
+
+  <!-- Website Logo
+  ================= -->
+  <section id="logo">
+    <div class="container text-center wow pulse">
+      <img href="~/recipe-book-html-template-master/recipe-book-html-template-master/images/logo-white.svg" alt="logo" />
+      <br />
+      <h1>Recipe Book</h1>
+    </div>
+  </section>
+
+  <!-- Recipe Section
+  =================== -->
+  @RenderBody()
+
+  <!-- Website Footer
+  =================== -->
+   <partial name="~/Views/Shared/_FoodLayoutViewComponents/_FooterViewComponent.cshtml" />
+ 
+  <!-- JavaScript files
+  ===================== -->
+   <partial name="~/Views/Shared/_FoodLayoutViewComponents/_ScriptViewComponent.cshtml" />
+
+</body>
+
+</html>

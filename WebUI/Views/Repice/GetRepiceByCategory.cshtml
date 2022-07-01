@@ -1,0 +1,31 @@
+﻿@using Entities.DTO_s
+@{
+    ViewData["Title"] = "GetRepiceByCategory";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewBag.category.CategoryName</h1>
+
+<section id="items">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2>Recipes</h2>
+            </div>
+        </div>
+        <div class="row">
+            <!-- First recipe item -->
+            <div  class="col-lg-4 col-md-6 col-sm-12 wow fadeIn">
+                <div id="foodList" class="recipe-item text-center">
+                   @foreach(SpecificationDetailDto recipe in ViewBag.repices)
+                    {<a href="RepiceGetDetail/@recipe.SpecificationId">
+                        <img src="~/recipe-book-html-template-master/images/bbq-pork-ribs.jpg" alt="bbq-pork-ribs" />
+                    </a>
+                    <br />
+                    <h3>@recipe.Description</h3>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

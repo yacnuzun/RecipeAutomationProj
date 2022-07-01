@@ -1,0 +1,175 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<script charset="utf-8" src="~/recipe-book-html-template-master/js/jquery-3.3.1.min.js"></script>
+<link href="~/lib/bootstrap/dist/css/bootstrap.css"/>
+
+<h1>Index</h1>
+
+<div id="tableCategory">
+    <table id="tabelUsers" class="table table-primary table-striped"> 
+    </table>
+</div>
+<div class="row" id="addDiv" style="display:none">
+    <div class="col-md-4">
+        <form asp-action="Add">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label">Kategori Adı</label>
+                <input asp-for="UserName" id="CategoryName" class="form-control" />
+                <span asp-validation-for="UserName" id="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" id="addSubmit" value="Create" class="btn btn-success" />
+                <button id="addDivExit" class="btn btn-danger">Kapat</button>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="row" id="updDiv" style="display:none">
+    <div class="col-md-4">
+        <form asp-action="Add">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="Id" id="Id" type="hidden" class="form-control" />
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label">Kategori Adı</label>
+                <input asp-for="UserName" id="updCategoryName" class="form-control" />
+                <span asp-validation-for="UserName" id="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" id="updSubmit" value="Create" class="btn btn-success" />
+                <button id="updDivExit" class="btn btn-danger">Kapat</button>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<button class="btn btn-info" id="addBtn">Ekle</button>
+
+
+<script>
+  
+    
+    
+    
+//Verileri Çek
+ $(document).ready(function (){
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            url:"/Admin/Category/CategoryListele",
+            success:function(data){
+                var values=jQuery.parseJSON(data);
+                console.log(values);
+                document.getElementById("tableCategory").innerHTML="";
+                 var tableHTML="<table class=\"table table-secondary table-striped\">"+
+        "<thead>"+
+            "<tr>"+
+                "<th scope=\"col\">MateryalAdı</th>"+
+                "<th scope=\"col\">İşlem</th>"+
+             "</tr>"+
+             "</thead><tbody>";
+                    $.each(values, function(key,value){
+                    tableHTML+="<tr>"
+                     +"<td>"+value.CategoryName+"</td>"
+                     +"<td><a id=\"btnUpdate\" onclick=\"updt("+value.Id+")\" class=\"btn btn-warning\">Güncelle</a>"
+                     +"<a id=\"btnDelete\" onclick=\"dlt("+value.Id+")\" class=\"btn btn-danger\">Sil</a></td></tr>";
+                })
+                  document.getElementById("tableCategory").innerHTML=tableHTML;
+
+                tableHTML+="</tbody></table>";
+                    
+            }
+        })
+            })
+
+
+
+//Ekleme Divini kapat
+         $("#addDivExit").click(function(){
+        $("#addDiv").css("display","none");
+    })
+  
+    
+ //Ekleme Divini Aç
+    $("#addBtn").click(function(){
+        $("#addDiv").css("display","block");
+    })
+
+
+ //Ekleme işlemini yap.
+$("#addSubmit").click(function(){
+                                     var category={
+                                     CategoryName:$("#CategoryName").val()
+                                              }
+                                                 $.ajax({
+                                              dataType:"json",
+                                              type:"post",
+                                              url:"/Admin/Category/Added",
+                                              data:category,
+                                              success:function(data){
+                                                  var x=jQuery.parseJSON(data);
+                                                  alert(x.Message);
+                                              }
+                                          })
+                                          })
+
+
+
+//Silme İşlemi Yap.
+ function dlt(id){
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            url:"/Admin/Category/Deleted?id="+id,
+            success:function(data){
+                var x=jQuery.parseJSON(data);
+                alert(x);
+            }
+        })
+    }
+
+
+
+
+ function updt(id){
+        $("#updDiv").css("display","block");
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            url:"/Admin/Category/Category?id="+id,
+            success:function(data){
+                var x=jQuery.parseJSON(data);
+                $("#Id").val(x.Id);
+                $("#updCategoryName").val(x.CategoryName);
+            }
+        })
+    }
+
+ $("#updSubmit").click(function(){
+        var category={
+            Id:$("#Id").val(),
+            CategoryName:$("#updCategoryName").val()
+        }
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            url:"/Admin/Category/Updated",
+            data: category,
+            success:function(data){
+                var x=jQuery.parseJSON(data);
+                alert(x);
+            }
+        })
+    })
+
+</script>

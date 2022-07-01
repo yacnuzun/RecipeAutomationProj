@@ -1,0 +1,202 @@
+﻿@using Entities.Concrete
+
+
+@{
+    ViewData["Title"] = "Add";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<script charset="utf-8" src="~/recipe-book-html-template-master/js/jquery-3.3.1.min.js"></script>
+<link href="~/lib/bootstrap/dist/css/bootstrap.css"/>
+
+
+<h4>Kullanıcılar</h4>
+<hr />
+<div id="tableUser">
+    <table id="tabelUsers" class="table table-primary table-striped"> 
+    </table>
+</div>
+<div class="row" id="addDiv" style="display:none">
+    <div class="col-md-4">
+        <form asp-action="Add">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="RoleId" class="control-label">RoleId</label>
+                <select class="form-select form-control" id="RoleId" aria-label="Default select example">
+                    <option selected>Open this select menu</option>
+                    @foreach(Role role in ViewBag.Role){
+                        <option value="@role.Id">@role.RoleName</option>
+                    }                         
+                </select>
+                <span asp-validation-for="RoleId"  class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label">UserName</label>
+                <input asp-for="UserName" id="UserName" class="form-control" />
+                <span asp-validation-for="UserName" id="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label">Password</label>
+                <input asp-for="Password" id="Password" class="form-control" />
+                <span asp-validation-for="Password"  class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" id="addSubmit" value="Create" class="btn btn-success" />
+                <button id="addDivExit" class="btn btn-danger">Kapat</button>
+
+            </div>
+        </form>
+    </div>
+</div>
+<button class="btn btn-info" id="addBtn">Ekle</button>
+<div class="row" id="updDiv" style="display:none">
+    <div class="col-md-4">
+        <form asp-action="Add">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="Id" id="Id" type="hidden" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="RoleId" class="control-label">RoleId</label>
+                <select class="form-select form-control" id="updRoleId" aria-label="Default select example">
+                    <option selected>Open this select menu</option>
+                    @foreach(Role role in ViewBag.Role){
+                        <option value="@role.Id">@role.RoleName</option>
+                    }                         
+                </select>
+                <span asp-validation-for="RoleId"  class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label">UserName</label>
+                <input asp-for="UserName" id="updUserName" class="form-control" />
+                <span asp-validation-for="UserName" id="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label">Password</label>
+                <input asp-for="Password" id="updPassword" class="form-control" />
+                <span asp-validation-for="Password"  class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" id="updSubmit" value="Create" class="btn btn-success" />
+                <button id="updDivExit" class="btn btn-danger">Kapat</button>
+
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+    //Ekleme Divini Aç
+    $("#addBtn").click(function(){
+        $("#addDiv").css("display","block");
+    })
+    //Ekleme işlemini yap.
+    $("#addSubmit").click(function(){
+        var user={
+        RoleId:$("#RoleId").val(),
+        UserName:$("#UserName").val(),
+        Password:$("#Password").val()
+    }
+    $.ajax({
+        dataType:"json",
+        type:"post",
+        url:"/admin/User/Added",
+        data:user,
+        success:function(data){
+            var x=jQuery.parseJSON(data);
+            alert(x.Message);
+        }
+    })
+    })
+    //Ekleme Divini kapat
+    $("#addDivExit").click(function(){
+        $("#addDiv").css("display","none");
+    })
+    $(document).ready(function(){
+        veriler();
+    })
+    $(document).on(function(){
+        veriler();
+    })
+    //Verileri Çek
+    function veriler(){
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            url:"/Admin/User/UserListele",
+            success:function(data){
+                var values=jQuery.parseJSON(data);
+                console.log(values);
+                document.getElementById("tabelUsers").innerHTML="";
+                 var tableHTML="<table class=\"table-primary \">"+
+        "<thead>"+
+            "<tr>"+
+                "<th scope=\"col\">UserName</th>"+
+                "<th scope=\"col\">İşlem</th>"+
+             "</tr>"+
+             "</thead><tbody>";
+                    $.each(values, function(key,value){
+                    tableHTML+="<tr>"
+                     +"<td>"+value.UserName+"</td>"
+                     +"<td><a id=\"btnUpdate\" onclick=\"updt("+value.Id+")\" class=\"btn btn-warning\">Güncelle</a>"
+                     +"<a id=\"btnDelete\" onclick=\"dlt("+value.Id+")\" class=\"btn btn-danger\">Sil</a></td></tr>";
+                })
+                  document.getElementById("tabelUsers").innerHTML=tableHTML;
+
+                tableHTML+="</tbody></table>";
+                    
+            }
+        })
+    }
+    
+    function dlt(id){
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            url:"/Admin/User/Deleted?id="+id,
+            success:function(data){
+                var x=jQuery.parseJSON(data);
+                alert(x);
+            }
+        })
+    }
+    function updt(id){
+        $("#updDiv").css("display","block");
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            url:"/Admin/User/User?id="+id,
+            success:function(data){
+                var x=jQuery.parseJSON(data);
+                $("#Id").val(x.Id);
+                $("#updRoleId").val(x.RoleId);
+                $("#updUserName").val(x.UserName);
+                $("#updPassword").val(x.Password);
+            }
+        })
+    }
+    $("#updSubmit").click(function(){
+        var user={
+            Id:$("#Id").val(),
+            RoleId:$("#updRoleId").val(),
+            UserName:$("#updUserName").val(),
+            Password:$("#updPassword").val()
+        }
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            url:"/Admin/User/Updated",
+            data: user,
+            success:function(data){
+                var x=jQuery.parseJSON(data);
+                alert(x);
+            }
+        })
+    })
+
+</script>

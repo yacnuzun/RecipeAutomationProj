@@ -1,0 +1,149 @@
+﻿@using Entities.Concrete
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<script charset="utf-8" src="~/recipe-book-html-template-master/js/jquery-3.3.1.min.js"></script>
+<h1>Tarifler</h1>
+
+<div id="ListRecipes">
+</div>
+
+<div class="row" id="addDiv" style="display:none">
+    <div class="col-md-4">
+        <form id="AddRecipe" style="display:none">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <select class="form-select form-control" id="CategoryId" aria-label="Default select example">
+                    <option selected>Open this select menu</option>
+
+                    @foreach(Category category in ViewBag.categories){
+                        <option value="@category.Id">@category.CategoryName</option>
+                    }            
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label  class="control-label">Tarif</label>
+                <input  id="Description" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" id="addSubmit" value="Create" class="btn btn-success" />
+                <button id="addDivExit" class="btn btn-danger">Kapat</button>
+
+            </div>
+        </form>
+        <form id="materyalAdd"  style="display:block">
+        <div id="materyalsAdd" class="form-group">
+                <div class="form-group">
+                <select class="form-select form-control" id="MaterialId" aria-label="Default select example">
+                    <option selected>Open this select menu</option>
+
+                    @foreach(Material material in ViewBag.materials){
+                        <option value="@material.Id">@material.MaterialName</option>
+                    }            
+                </select>
+            </div>
+            <div class="form-group">
+                <label  class="control-label">Ölçü</label>
+                <input  id="Slug" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label  class="control-label">Ölçü Aleti</label>
+                <input  id="Gauger" class="form-control" />
+            </div>
+            <input type="button" id="addMetarialSubmit" value="MalzemeEkle" class="btn btn-success" />
+            <input type="button" id="addFinishMaterialSubmit" value="TarifGir" class="btn btn-success" />
+
+                <button id="addDivExit" class="btn btn-danger">Kapat</button>
+            </div>
+         </form>
+    </div>
+</div>
+
+<button class="btn btn-info" id="addBtn">Ekle</button>
+
+
+
+<script>
+    $(document).ready(function(){
+        $.ajax({
+            type:"post",
+            url:"/Recipe/SpicificationListele",
+            success:function(data){
+                var values=jQuery.parseJSON(data);
+                console.log(values);
+                document.getElementById("ListRecipes").innerHTML="";
+                 var tableHTML="<table class=\"table table-success table-striped\">"+
+        "<thead>"+
+            "<tr>"+
+                "<th scope=\"col\">Açıklama</th>"+
+                "<th scope=\"col\">EklenmeTarihi</th>"+
+                "<th scope=\"col\">Category</th>"+
+                "<th scope=\"col\">İşlem</th>"+
+             "</tr>"+
+             "</thead><tbody>";
+                    $.each(values, function(key,value){
+                    tableHTML+="<tr>"
+                     +"<td>"+value.Description+"</td>"
+                     +"<td>"+value.DateTime+"</td>"
+                     +"<td>"+value.Category+"</td>"
+                     +"<td><a id=\"btnUpdate\" onclick=\"updt("+value.Id+")\" class=\"btn btn-warning\">Güncelle</a>"
+                     +"<a id=\"btnDelete\" onclick=\"dlt("+value.Id+")\" class=\"btn btn-danger\">Sil</a></td></tr>";
+                })
+                  document.getElementById("ListRecipes").innerHTML=tableHTML;
+
+                tableHTML+="</tbody></table>";
+                }
+        })
+    })
+    $("#addBtn").click(function(){
+        $("#addDiv").css("display","block");
+    })
+    $("#addSubmit").click(function(){
+        $("#materyalAdd").css("display","none");
+        $("#AddRecipe").css("display","block");
+        var recipe={
+            CategoryId:$("#CategoryId").val(),
+            //MaterialId:$("#MaterialId").val(),
+            //Slug:$("#Slug").val(),
+            //Gauger:$("#Gauger").val(),
+            Description:$("#Description").val()
+        }
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            url:"/Admin/Recipe/Added",
+            data:recipe,
+            success:function(data){
+                var x=jQuery.parseJSON(data);
+                alert(x);
+            }
+        })
+    })
+    $("#addDivExit").click(function(){
+        $("#addDiv").css("display","none");
+    })
+    $("#addMetarialSubmit").click(function(){
+        var recipeMaterial={
+            MaterialId:$("#MaterialId").val(),
+            Slug:$("#Slug").val(),
+            Gauger:$("#Gauger").val(),
+        }
+        $.ajax({
+            type:"get",
+            url:"/Admin/Recipe/AddMaterial",
+            data:recipeMaterial,
+            success:function(data){
+                
+                alert("Eklendi.");
+            }
+        })
+    })
+    $("#addFinishMaterialSubmit").click(function(){
+        $("#materyalAdd").css("display","none");
+        $("#AddRecipe").css("display","block");
+    })
+</script>
